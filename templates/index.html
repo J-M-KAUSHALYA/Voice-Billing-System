@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovative Voice Billing Website</title>
+    <style>
+        /* Additional inline styles for specific elements */
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant&display=swap');
+
+        body {
+            font-family: 'Cormorant', serif; /* Use a professional font */
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9; /* Light background */
+            color: #333; /* Dark text color */
+        }
+
+        h1 {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 2px solid #28a745; /* Green border */
+    background-color: #28a745; /* Green background color */
+    color: #fff; /* White text color */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Shadow effect */
+}
+
+        #speakButton {
+            display: block;
+            margin: 0 auto;
+            padding: 0; /* Remove default button padding */
+            border: none; /* Remove default button border */
+            background: none; /* Transparent background */
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        #speakButton img {
+            width: 80px; /* Set the width of the image */
+            height: auto; /* Maintain aspect ratio */
+            margin-left: -30px;
+        }
+
+        #speakButton:hover {
+            opacity: 0.8; /* Reduce opacity on hover */
+        }
+
+        #generate {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #28a745; /* Professional green color for buttons */
+            color: #fff; /* White text color */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            align-items: center;
+        }
+
+        #generate:hover {
+            background-color: #218838; /* Darker shade of green on hover */
+        }
+
+        #values {
+            margin-top: 20px;
+            padding: 0 20px;
+        }
+
+        #displayTable {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        #displayTable th,
+        #displayTable td {
+            border: 1px solid #ddd; /* Light gray border */
+            padding: 8px;
+            text-align: left;
+        }
+
+        #displayTable th {
+            background-color: #f2f2f2; /* Light gray background for table headers */
+        }
+
+        /* Styles for the invoice */
+        .invoice {
+            background-color: #fff;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Shadow effect */
+            border: 2px solid #28a745; /* Green border */
+        }
+
+        .invoice-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .invoice-header h2 {
+            margin: 0;
+            font-size: 24px;
+            color: #000000; /* Professional green color */
+        }
+
+        .item {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .item span {
+            font-weight: bold;
+            margin-right: 10px;
+            color: #555; /* Dark gray color */
+        }
+
+        .total-amount {
+            margin-top: 20px;
+            text-align: right;
+            border-top: 2px solid #28a745; /* Green top border */
+            padding-top: 10px;
+            color: #000000; /* Green color for total amount */
+        }
+
+        .date-time {
+            margin-top: 10px;
+            text-align: right;
+            color: #777; /* Light gray color */
+        }
+    </style>
+</head>
+<body>
+    <h1>Innovative Voice Billing Website</h1>
+    <button id="speakButton"><img src="microphone.png" alt="Speak Icon"></button>
+    <div id="values">
+        <table id="displayTable">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Item Name</th>
+                    <th style="width: 15%;">Quantity</th>
+                    <th style="width: 15%;">Units</th>
+                    <th style="width: 15%;">No Of Items</th>
+                    <th style="width: 30%;">Amount</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Table body will be filled dynamically -->
+            </tbody>
+        </table>
+    </div>
+    <button id="generate">Generate</button>
+    <div id="invoiceContainer"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Event listener for the "Speak" button
+            document.getElementById("speakButton").addEventListener("click", function() {
+                // Replace this with your speech recognition code
+                // For example:
+                var itemName = prompt("Enter Item Name:");
+                var quantity = parseInt(prompt("Enter Quantity:"));
+                var unit = prompt("Enter Units:");
+                var numberOfItems = parseInt(prompt("Enter Number of Items:"));
+                var amount = parseFloat(prompt("Enter Amount:"));
+                
+                // Create a new table row
+                var newRow = document.createElement("tr");
+                newRow.innerHTML = "<td>" + itemName + "</td>" +
+                                   "<td>" + quantity + "</td>" +
+                                   "<td>" + unit + "</td>" +
+                                   "<td>" + numberOfItems + "</td>" +
+                                   "<td>" + (quantity * amount).toFixed(2) + "</td>";
+
+                // Append the new row to the table body
+                var tableBody = document.getElementById("tableBody");
+                tableBody.appendChild(newRow);
+            });
+
+            // Event listener for the "Generate" button
+            document.getElementById("generate").addEventListener("click", function() {
+                generateInvoice();
+            });
+
+            // Function to generate the invoice
+            function generateInvoice() {
+                // Get the table body
+                var tableBody = document.getElementById("tableBody");
+                
+                // Get all rows in the table body
+                var rows = tableBody.getElementsByTagName("tr");
+                
+                // Initialize variables for invoice content and total amount
+                var invoiceContent = "<div class='invoice'><div class='invoice-header'><h2>Invoice</h2></div>"; // Start of invoice content with heading
+                var totalAmount = 0;
+
+                // Iterate over each row in the table body
+                for (var i = 0; i < rows.length; i++) {
+                    var cells = rows[i].getElementsByTagName("td");
+                    // Extract data from each cell
+                    var itemName = cells[0].innerText;
+                    var quantity = parseInt(cells[1].innerText);
+                    var unit = cells[2].innerText;
+                    var numberOfItems = parseInt(cells[3].innerText);
+                    var amount = parseFloat(cells[4].innerText);
+                    // Calculate total amount
+                    totalAmount += (quantity * amount);
+                    // Add item to invoice content
+                    invoiceContent += "<div class='item'><span>Name of the Item:</span>" + itemName + "</div>" +
+                                      "<div class='item'><span>Quantity:</span>" + quantity + "</div>" +
+                                      "<div class='item'><span>No Of Items:</span>" + numberOfItems + "</div>" +
+                                      "<div class='item'><span>Amount:</span>" + (quantity * amount).toFixed(2) + "</div>";
+                }
+
+                // Add total amount to invoice content
+                invoiceContent += "<div class='total-amount'><strong>Total Amount:</strong> " + totalAmount.toFixed(2) + "</div>";
+
+                // Get current date and time
+                var currentDate = new Date();
+                var dateTime = "<div class='date-time'><strong>Date and Time:</strong> <span>" + currentDate.toLocaleString() + "</span></div>";
+
+                // Close the invoice content
+                invoiceContent += dateTime + "</div>";
+
+                // Display the invoice content in the container
+                var invoiceContainer = document.getElementById("invoiceContainer");
+                invoiceContainer.innerHTML = invoiceContent;
+            }
+        });
+    </script>
+</body>
+</html>
